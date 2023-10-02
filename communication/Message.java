@@ -5,12 +5,10 @@ import Agent.Agent;
 public abstract class Message {
     private Agent sender;
     private Agent receiver;
-    private String messageType;
 
-    public Message(Agent sender, Agent receiver, String messageType) {
+    public Message(Agent sender, Agent receiver) {
         this.sender = sender;
         this.receiver = receiver;
-        this.messageType = messageType;
     }
 
     public Agent getSender() {
@@ -21,7 +19,4 @@ public abstract class Message {
         return receiver;
     }
 
-    public String getMessageType() {
-        return messageType;
-    }
 }

@@ -4,22 +4,18 @@ import java.util.List;
 
 import communication.Message;
 import communication.OfferMessage;
-import communication.RequestMessage;
 import communication.placePublic;
 
 // Classe de base pour tous les agents
-public abstract class Agent {
+public abstract class Agent extends Thread{
 
-    private placePublic placePublic;
-
-
-    protected String agentID;
+    protected int agentID;
     protected String agentType;
 
     protected List<Preference> preferences;
     protected List<Contrainte> contraintes;
 
-    public Agent(String agentID, String agentType, List<Preference> preferencesUtilisateur, List<Contrainte> contraintesUtilisateur) {
+    public Agent(int agentID, String agentType, List<Preference> preferencesUtilisateur, List<Contrainte> contraintesUtilisateur) {
         this.agentID = agentID;
         this.agentType = agentType;
         this.preferences = preferencesUtilisateur;
@@ -30,7 +26,7 @@ public abstract class Agent {
 
     //////////////// Getter pour les attributs
 
-    public String getAgentID() {
+    public int getAgentID() {
         return agentID;
     }
 
@@ -44,16 +40,14 @@ public abstract class Agent {
         message.getReceiver().receiveMessage(message);
     }
 
-    public void receiveMessage(Message message) {
+    public Message receiveMessage(Message message) {
+        return null; 
     }
 
     protected void handleOffer(OfferMessage offerMessage) {
         // Logique pour traiter l'offre
     }
 
-    protected void handleRequest(RequestMessage requestMessage) {
-        // Logique pour traiter la demande
-    }
 }
 
 

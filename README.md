@@ -18,3 +18,11 @@ Les thread sont toujours dans le main.
     le "time"
     liste de service
     ///// Dans le service il y a l'object agent fournisseur pour que les négociateur puisse le contacter
+
+# Dans un premier temps 
+ 
+    Il n'existe que 3 produit
+        - produit A
+        - produit B
+        - produit C
+    
