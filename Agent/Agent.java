@@ -1,10 +1,11 @@
 package Agent;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 import communication.Message;
 import communication.OfferMessage;
-import communication.placePublic;
 
 // Classe de base pour tous les agents
 public abstract class Agent extends Thread{
@@ -14,6 +15,8 @@ public abstract class Agent extends Thread{
 
     protected List<Preference> preferences;
     protected List<Contrainte> contraintes;
+    
+    protected ArrayList<Message> boiteAuxLettres  = new ArrayList<Message>();;
 
     public Agent(int agentID, String agentType, List<Preference> preferencesUtilisateur, List<Contrainte> contraintesUtilisateur) {
         this.agentID = agentID;
@@ -40,12 +43,9 @@ public abstract class Agent extends Thread{
         message.getReceiver().receiveMessage(message);
     }
 
-    public Message receiveMessage(Message message) {
-        return null; 
-    }
-
-    protected void handleOffer(OfferMessage offerMessage) {
-        // Logique pour traiter l'offre
+    // Ajouter un message à la boîte aux lettres
+    public void receiveMessage(Message message) {
+        boiteAuxLettres.add(message);
     }
 
 }
