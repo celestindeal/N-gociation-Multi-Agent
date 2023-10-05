@@ -51,22 +51,31 @@ public class AgentFournisseur extends Agent {
 
         // proposer le service sur la place public
         placePublic.getInstance(null).buyService(service);
-
-        System.out.println("Fournisseur " + service.getAgentFournisseur().getAgentID() + " : Je propose le service " + serviceID + " au prix de " + service.getPrix() + "€");
     }
 
     
 
     // Fonction de gestion des messages
     public void traiterMessages(Message message) {
-        System.out.println("Fourniseur " + this.agentID + " : Je traite un message de " + message.getSender().getAgentID());
+        System.out.println("FOURNISEUR " + this.agentID + " : Je traite un message de " + message.getSender().getAgentID());
+
+        // contrôler si l'agent est autorisé à négocier le service
+        if(!autoriserNegociationThisService(message.getSender(), message.getOffer().getService())) {
+            System.out.println("FOURNISEUR " + this.agentID + " : l'agent " + message.getSender().getAgentID() + " n'est pas autorisé à négocier le service " + message.getOffer().getService().getServiceID());
+            // envoyer un message de refus
+            this.sendMessage(new refuseMessage(this, message.getSender(), message.getOffer()));
+            return;
+        }
+
         if (message instanceof OfferMessage) {
             StrategiesFournisseur.strategieOffreMessage(this, (OfferMessage) message, historique.get(message.getSender()));
         } else if (message instanceof refuseMessage) {
-            System.out.println("Fournisseur " + this.agentID + " : l'offre de " + message.getSender().getAgentID() + " a été refusée");
+            System.out.println("FOURNISEUR " + this.agentID + " : je refuse l'offre de " + message.getSender().getAgentID() + " pour le service " + message.getOffer().getService().getServiceID() + " à " + message.getOffer().getPrix() + "€");
             
             //supprimer l'hisorique de l'agent
             historique.remove(message.getSender());
+
+            placePublic.getInstance(null).removeService( message.getOffer().getService() );
 
         } else if (message instanceof valideMessage) {
             System.out.println("Fournisseur " + this.agentID + " : l'offre de " + message.getSender().getAgentID() + " a été acceptée");
@@ -82,5 +91,32 @@ public class AgentFournisseur extends Agent {
 
         // Effacer les messages traités de la boîte aux lettres
         boiteAuxLettres.remove(message);
+    }
+
+    //  on autorise la negociation d'un service avec un seul agent à la fois
+    private boolean autoriserNegociationThisService(Agent agent, Service service) {
+
+        // si l'agent négocie déjà une autre offret on refuse la negociation
+        if(historique.containsKey(agent) && !historique.get(agent).getOffreNegociateur().get(0).getService().equals(service)) {
+            // l'agent a déjà negocier ce service
+            return false;
+        }
+
+        //Savoir si le service est déjà negocier 
+        for(Historique h : historique.values()) {
+            if(h.getOffreNegociateur().get(0).getService().equals(service)) {
+                // le service est déjà negocier
+                // si c'est parle le même agent on autorise la negociation
+                if(h.getOffreNegociateur().get(0).equals(agent)) {
+                    return true;
+                } else {
+                    // sinon on refuse la negociation
+                    return false;
+                }
+            }
+        }
+        // le service n'est pas encore negocier
+        return true;
+        
     }
 }

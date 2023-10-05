@@ -43,17 +43,17 @@ public class AgentNegociateur extends Agent {
     }
 
     private void traiterMessages(Message message) {
-        System.out.println("Negociateur " + this.agentID + " : Je traite un message de " + message.getSender().getAgentID());
+        System.out.println("NEGOCIATEUR " + this.agentID + " : Je traite un message de " + message.getSender().getAgentID());
          if (message instanceof OfferMessage) {
             StrategiesNegociateur.strategieOffreMessage(this, (OfferMessage) message, historique.get(message.getSender()));
         } else if (message instanceof refuseMessage) {
-            System.out.println("Negociateur " + this.agentID + " : l'offre de " + message.getSender().getAgentID() + " a été refusée");
+            System.out.println("NEGOCIATEUR " + this.agentID + " : l'offre pour le service" + message.getOffer().getService().getServiceID() + "que j'ai envoyé a " + message.getSender().getAgentID() + " a été refusé");
             
             //supprimer l'hisorique de l'agent
             historique.remove(message.getSender());
 
         } else if (message instanceof valideMessage) {
-            System.out.println("...................................    Negociateur " + this.agentID + " : l'offre de " + message.getSender().getAgentID() + " a été acceptée");
+            System.out.println(".................NEGOCIATEUR " + this.agentID + " : l'offre pour le service" + message.getOffer().getService().getServiceID() + "que j'ai envoyé a " + message.getSender().getAgentID() + " a été accepté");
 
             historique.remove(message.getSender());
             nbNegociation --;
@@ -83,7 +83,7 @@ public class AgentNegociateur extends Agent {
     // fonction pour recherche un service dans la liste des services
     public void rechercheService() {
         // prend un service aléatoire dans la liste des services et envoyer une offre 
-        System.out.println("Negociateur " + this.agentID + " : Je recherche un service //// Il y a " + placePublic.getInstance(null).getServiceAvendre().size() + " services en vente");
+        System.out.println("NEGOCIATEUR " + this.agentID + " : Je recherche un service //// Il y a " + placePublic.getInstance(null).getServiceAvendre().size() + " services en vente");
         Service service = placePublic.getInstance(null).getServiceAvendre().get((int) (Math.random() * placePublic.getInstance(null).getServiceAvendre().size()));
         OfferMessage offre = new OfferMessage(this, service.getAgentFournisseur(), service, service.getPrix());
         sendMessage(offre);

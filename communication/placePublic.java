@@ -32,18 +32,16 @@ public final class placePublic {
     }
 
     public void buyService(Service service) {
-        System.out.println("Service " + service.getServiceID() + " vendu par " + service.getAgentFournisseur().getAgentID());
+        System.out.println("MISE EN VENTE : le service " + service.getServiceID() + " vendu par " + service.getAgentFournisseur().getAgentID());
         servicesEnVente.add(service);
     }
 
     public void removeService(Service service) {
-        System.out.println("la liste de services en vente est de taille " + servicesEnVente.size() + " et contient le service ");
+        System.out.println("RETRAIT DE LA VENTE : le service " + service.getServiceID() + " vendu par " + service.getAgentFournisseur().getAgentID() + " a été retiré de la vente");
         for (Service s : servicesEnVente) {
             System.out.println(s.getServiceID());
         }
-        System.out.println("Et moi je dois supprimer le service " + service.getServiceID() + " vendu par " + service.getAgentFournisseur().getAgentID());
         servicesEnVente.remove(service);
-        System.out.println("maintenant la liste de services en vente est de taille " + servicesEnVente.size() );
     }
 
     public ArrayList<Service> getServiceAvendre() {
@@ -57,8 +55,6 @@ public final class placePublic {
                 serviceVenduFournisseur.add(service);
             }
         }
-
-        System.out.println("Fournisseur " + agent.getAgentID() + " : J'ai " + serviceVenduFournisseur.size() + " services en vente");
         return serviceVenduFournisseur;
     }
 
