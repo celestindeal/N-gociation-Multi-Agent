@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import communication.Offre;
 
 public class Historique {
-    private ArrayList<Offre> Offrefournisseur ;
-    private ArrayList<Offre> OffreNegociateur ;
+    private ArrayList<Offre> Offrefournisseur = new ArrayList<Offre>();
+    private ArrayList<Offre> OffreNegociateur = new ArrayList<Offre>() ;
 
-    public Historique( ArrayList<Offre> Offrefournisseur, ArrayList<Offre> OffreNegociateur) {
-        this.Offrefournisseur = Offrefournisseur;
-        this.OffreNegociateur = OffreNegociateur;
+    public Historique() {
+
     }
     
     public ArrayList<Offre> getOffrefournisseur() {
@@ -21,7 +20,7 @@ public class Historique {
         return OffreNegociateur;
     }
 
-    public Offre addOffrefournisseur(Offre offre) {
+    public Offre addOffreFournisseur(Offre offre) {
         Offrefournisseur.add(offre);
         return offre;
     }

@@ -8,10 +8,11 @@ import communication.valideMessage;
 
 public class StrategiesNegociateur {
 
-    public static void strategieOffreMessage(AgentNegociateur agent, OfferMessage offerMessage, Historique historique) {
+    public static double  strategieOffreMessage(AgentNegociateur agent, OfferMessage offerMessage, Historique historique) {
+
+        return offerMessage.getOffer().getPrix();
    
-        valideMessage message = new valideMessage(agent, offerMessage.getSender(), offerMessage.getOffer());
-        agent.sendMessage(message);
+
   
     }
 

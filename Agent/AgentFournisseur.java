@@ -10,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import Strate.StrategiesFournisseur;
 import communication.Message;
 import communication.OfferMessage;
+import communication.Offre;
 import communication.placePublic;
 import communication.refuseMessage;
 import communication.valideMessage;
@@ -69,15 +70,17 @@ public class AgentFournisseur extends Agent {
         }
 
         if (message instanceof OfferMessage) {
-            // réaliser la stratégie de l'offre et revoyer un message
 
+            // réaliser la stratégie de l'offre et revoyer un message
             Double nouvelleProposition = StrategiesFournisseur.strategieOffreMessage(this, (OfferMessage) message, historique.get(message.getSender()));
             // si la valeur est la même c'est que le fournisseur accepte l'offre
             if( nouvelleProposition == message.getOffer().getPrix() ){
                 accepteOffer((OfferMessage) message);
             }else if(0.0 < nouvelleProposition && nouvelleProposition < message.getOffer().getPrix()) {
                 // envoyer un message de contre offre
-                this.sendMessage(new OfferMessage(this,  message.getSender(), message.getOffer().getService(), nouvelleProposition));
+                Offre nouvelleOffre = new Offre(message.getOffer().getService(), nouvelleProposition);
+                this.sendMessage(new OfferMessage(this,  message.getSender(), nouvelleOffre));
+                addHistorique(message.getSender(), message.getOffer(), nouvelleOffre);
             }else{
                 // envoyer un message de refus
                 this.sendMessage(new refuseMessage(this, message.getSender(), message.getOffer().getService()));
@@ -105,9 +108,22 @@ public class AgentFournisseur extends Agent {
 
         // Effacer les messages traités de la boîte aux lettres
         boiteAuxLettres.remove(message);
-        System.out.println("FOURNISEUR " + this.agentID + " : j'ai " + boiteAuxLettres.size() + " messages en attente après traitement");
     }
 
+
+    private void addHistorique(Agent sender, Offre offerNegociateur, Offre offerFournisseur) {
+        // si l'agent n'a pas encore d'historique on le créer
+        if(!historique.containsKey(sender)) {
+            Historique h = new Historique();
+            h.addOffreNegociateur(offerNegociateur);
+            h.addOffreFournisseur(offerFournisseur);
+            historique.put(sender, h);
+        }else{
+            // sinon on ajoute l'offre à l'historique
+            historique.get(sender).addOffreNegociateur(offerNegociateur);
+            historique.get(sender).addOffreFournisseur(offerFournisseur);
+        }
+    }
 
     private void accepteOffer(OfferMessage offerMessage) {
         System.out.println("FOURNISEUR " + this.agentID + " : j'accepte l'offre de " + offerMessage.getSender().getAgentID() + " pour le service " + offerMessage.getOffer().getService().getServiceID() + " à " + offerMessage.getOffer().getPrix());
@@ -128,7 +144,7 @@ public class AgentFournisseur extends Agent {
 
 
         // envoyer des messages de refus aux autres agents négociateurs qui on envoyer une offre pour le même service et suppression de leurs messages en attente
-        System.out.println(boiteAuxLettres.size());
+
         List<Message> testboiteAuxLettres  = new CopyOnWriteArrayList<>(this.boiteAuxLettres);
         for(Message m : testboiteAuxLettres) {
             if(!m.equals(offerMessage) && m instanceof OfferMessage && m.getOffer().getService().equals(offerMessage.getOffer().getService()) ) {
@@ -136,10 +152,9 @@ public class AgentFournisseur extends Agent {
                 this.sendMessage(new refuseMessage(this, m.getSender(), m.getOffer().getService()));
                 // supprimer le message de la boite aux lettres
                 boiteAuxLettres.remove(m);
-                System.out.println("fin");
             }
         }
-        System.out.println(boiteAuxLettres.size());
+
 
         // envoyer un message de validation
         valideMessage message = new valideMessage(this, offerMessage.getSender(), offerMessage.getOffer());
@@ -147,6 +162,9 @@ public class AgentFournisseur extends Agent {
 
         //supprimer le service vendu de la place public
         placePublic.getInstance(null).removeService( message.getOffer().getService() );
+        // supprimer l'historique de cette négociation
+        historique.remove(offerMessage.getSender());
+    
     }
 
     //  on autorise la negociation d'un service avec un seul agent à la fois
