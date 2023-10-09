@@ -32,7 +32,7 @@ public final class placePublic {
     }
 
     public void buyService(Service service) {
-        System.out.println("MISE EN VENTE : le service " + service.getServiceID() + " vendu par " + service.getAgentFournisseur().getAgentID());
+        System.out.println("MISE EN VENTE : le service " + service.getServiceID() + " vendu par le fournisseur " + service.getAgentFournisseur().getAgentID());
         servicesEnVente.add(service);
     }
 

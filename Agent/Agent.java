@@ -48,6 +48,8 @@ public abstract class Agent extends Thread{
         boiteAuxLettres.add(message);
     }
 
+    
+
 }
 
 

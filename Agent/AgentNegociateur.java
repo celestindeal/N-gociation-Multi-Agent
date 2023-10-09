@@ -43,7 +43,7 @@ public class AgentNegociateur extends Agent {
     }
 
     private void traiterMessages(Message message) {
-        System.out.println("NEGOCIATEUR " + this.agentID + " : Je traite un message de " + message.getSender().getAgentID());
+        System.out.println("NEGOCIATEUR " + this.agentID + " : Je traite un message du fournisseur " + message.getSender().getAgentID());
          if (message instanceof OfferMessage) {
             StrategiesNegociateur.strategieOffreMessage(this, (OfferMessage) message, historique.get(message.getSender()));
         } else if (message instanceof refuseMessage) {
@@ -86,6 +86,7 @@ public class AgentNegociateur extends Agent {
         System.out.println("NEGOCIATEUR " + this.agentID + " : Je recherche un service //// Il y a " + placePublic.getInstance(null).getServiceAvendre().size() + " services en vente");
         Service service = placePublic.getInstance(null).getServiceAvendre().get((int) (Math.random() * placePublic.getInstance(null).getServiceAvendre().size()));
         OfferMessage offre = new OfferMessage(this, service.getAgentFournisseur(), service, service.getPrix());
+        System.out.println("NEGOCIATEUR " + this.agentID + "j'envoie une offre au fournisseur = " + service.getAgentFournisseur().getAgentID() + " pour le service : " + service.getServiceID() );
         sendMessage(offre);
         nbNegociation ++;
     }

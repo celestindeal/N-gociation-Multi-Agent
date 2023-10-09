@@ -3,17 +3,18 @@ package Strate;
 import Agent.AgentFournisseur;
 import Agent.Historique;
 import communication.OfferMessage;
-import communication.placePublic;
-import communication.valideMessage;
 
 public class StrategiesFournisseur {
 
-    public static void strategieOffreMessage(AgentFournisseur agent, OfferMessage offerMessage, Historique historique) {
+    // retourne la nouvelle proposition 
+    // si la valeur est la même c'est que le fournisseur accepte l'offre
+    public static Double strategieOffreMessage(AgentFournisseur agent, OfferMessage offerMessage, Historique historique) {
    
-        valideMessage message = new valideMessage(agent, offerMessage.getSender(), offerMessage.getOffer());
-        placePublic.getInstance(null).removeService( message.getOffer().getService() );
-        agent.sendMessage(message);
+      
+        return offerMessage.getOffer().getPrix(); 
   
     }
+
+
 
 }

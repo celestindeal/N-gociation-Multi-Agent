@@ -20,7 +20,7 @@ public class main {
 
          // créer 3 services à la place 
         ArrayList<Agent.Service> services = new ArrayList<Agent.Service>();
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 1; i++){
             Agent.Service s = new Agent.Service(i, null, Double.NEGATIVE_INFINITY );
             services.add(s);
         }
