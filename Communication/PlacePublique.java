@@ -35,7 +35,7 @@ public final class PlacePublique {
     }
 
     public void buyService(Service service) {
-        System.out.println("MISE EN VENTE : le service " + service.getServiceID() + " vendu par le fournisseur " + service.getAgentFournisseur().getAgentID());
+        System.out.println("MISE EN VENTE : le service " + service.getServiceID() + " vendu par le fournisseur " + service.getAgentFournisseur().getAgentID() + " au prix de "  + service.getPrix());
         servicesEnVente.add(service);
     }
 

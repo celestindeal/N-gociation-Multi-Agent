@@ -38,6 +38,8 @@ public abstract class Agent extends Thread {
 
     public void sendMessage(Message message) {
         message.getReceiver().receiveMessage(message);
+
+        this.log("J'envoie un message à [" + message.getReceiver().getAgentType() + " " + message.getReceiver().getAgentID() + "] - Le message est de type "  + message.getClass().getSimpleName());
     }
 
     // Ajouter un message à la boîte aux lettres

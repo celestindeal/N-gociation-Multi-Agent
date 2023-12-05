@@ -158,6 +158,7 @@ public class AgentFournisseur extends Agent {
         // si l'agent négocie déjà une autre offret on refuse la negociation
         if (historique.containsKey(agent) && !historique.get(agent).getOffreNegociateur().get(0).getService().equals(service)) {
             // l'agent a déjà negocier ce service
+            this.log("Je refuse la négociation : l'agent est déjà sur une autre offre");
             return false;
         }
 
@@ -170,6 +171,7 @@ public class AgentFournisseur extends Agent {
                     return true;
                 } else {
                     // sinon on refuse la negociation
+                    this.log("Je refuse la négociation : le service est déjà négocié");
                     return false;
                 }
             }

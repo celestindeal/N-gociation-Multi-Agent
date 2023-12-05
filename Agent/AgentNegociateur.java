@@ -56,22 +56,24 @@ public class AgentNegociateur extends Agent {
             this.log("L'offre pour le service" + messageOfFournisseur.getOffer().getService().getServiceID() + "que j'ai envoyé a " + messageOfFournisseur.getSender().getAgentID() + " a été refusé");
 
             //supprimer l'hisorique de l'agent
-            historique.remove(message.getSender());
+            historique.remove(messageOfFournisseur.getSender());
 
         } else if (messageOfFournisseur instanceof MessageValide) {
             this.log("L'offre pour le service" + messageOfFournisseur.getOffer().getService().getServiceID() + "que j'ai envoyé a " + messageOfFournisseur.getSender().getAgentID() + " a été accepté");
 
-            historique.remove(message.getSender());
+            historique.remove(messageOfFournisseur.getSender());
         } else {
             // Message non reconnu
-            System.out.println("Message non reconnu : " + message.toString());
+            System.out.println("Message non reconnu : " + messageOfFournisseur.toString());
         }
-        boiteAuxLettres.remove(message);
+
+        // supprimer le message de la boite aux lettres
+        boiteAuxLettres.remove(messageOfFournisseur);
     }
 
-    private void addHistorique(Agent agent, Offre offreNegociateur, Offre offreFournisseur) {
-        historique.get(agent).addOffreNegociateur(offreNegociateur);
-        historique.get(agent).addOffreFournisseur(offreFournisseur);
+    private void addHistorique(Agent fournisseur, Offre offreNegociateur, Offre offreFournisseur) {
+        if (offreNegociateur != null) historique.get(fournisseur).getOffreNegociateur().add(offreNegociateur);
+        if (offreFournisseur != null) historique.get(fournisseur).getOffrefournisseur().add(offreFournisseur);
     }
 
 
@@ -104,6 +106,10 @@ public class AgentNegociateur extends Agent {
         MessageOffre messegaToFournisseur = StrategiesNegociateur.strategieInitiale(this, service.getAgentFournisseur(), h);
         this.log("Je veux acheter les service " + messegaToFournisseur.getOffer().getService().getServiceID() + " qui est proposer par le fourniseur " + messegaToFournisseur.getReceiver().getAgentID() + " au prix de " + messegaToFournisseur.getOffer().getPrix());
         sendMessage(messegaToFournisseur);
+
+    }
+
+    private void valideTransaction() {
 
     }
 
