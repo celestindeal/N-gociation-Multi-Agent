@@ -1,4 +1,4 @@
-package communication;
+package Communication;
 
 import Agent.Agent;
 
@@ -7,7 +7,6 @@ public abstract class Message {
     private Agent receiver;
     private Offre offre;
 
-    
 
     public Message(Agent sender, Agent receiver, Offre offre) {
         this.sender = sender;

@@ -1,30 +1,33 @@
-package communication;
+package Communication;
 
-
-import java.util.ArrayList;
 
 import Agent.AgentFournisseur;
 import Agent.Service;
 
-public final class placePublic {
-    private static placePublic instance;
+import java.util.ArrayList;
+
+public final class PlacePublique {
+    private static final ArrayList<Service> servicesEnVente = new ArrayList<Service>();
+    private static PlacePublique instance;
     private static ArrayList<Service> servicesPossible = new ArrayList<Service>();
-    private static ArrayList<Service> servicesEnVente = new ArrayList<Service>();
 
 
-    private placePublic(ArrayList<Service> services) {
-        this.servicesPossible = services;       
+    private PlacePublique() {
     }
 
-    public static placePublic getInstance(ArrayList<Service> services) {
+    public static PlacePublique getInstance() {
         if (instance == null) {
-            instance = new placePublic(services);
+            instance = new PlacePublique();
         }
         return instance;
     }
 
     public ArrayList<Service> getServicesPossible() {
         return servicesPossible;
+    }
+
+    public static void setServicesPossible(ArrayList<Service> servicesPossible) {
+        PlacePublique.servicesPossible = servicesPossible;
     }
 
     public Service getService(int agentID) {
@@ -50,8 +53,8 @@ public final class placePublic {
 
     public ArrayList<Service> getserviceVenduFournisseur(AgentFournisseur agent) {
         ArrayList<Service> serviceVenduFournisseur = new ArrayList<Service>();
-        for(Service service : servicesEnVente) {
-            if(service.getAgentFournisseur() == agent) {
+        for (Service service : servicesEnVente) {
+            if (service.getAgentFournisseur() == agent) {
                 serviceVenduFournisseur.add(service);
             }
         }

@@ -1,4 +1,4 @@
-package communication;
+package Communication;
 
 import Agent.Service;
 
@@ -17,6 +17,6 @@ public class Offre {
 
     public double getPrix() {
         return prix;
-    }   
+    }
 
 }

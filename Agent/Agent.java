@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import communication.Message;
-import communication.OfferMessage;
+import Communication.Message;
 
 // Classe de base pour tous les agents
-public abstract class Agent extends Thread{
+public abstract class Agent extends Thread {
 
     protected int agentID;
     protected String agentType;
-
     protected List<Preference> preferences;
     protected List<Contrainte> contraintes;
-    
-    protected ArrayList<Message> boiteAuxLettres  = new ArrayList<Message>();;
+
+    protected ArrayList<Message> boiteAuxLettres = new ArrayList<Message>();
+    ;
 
     public Agent(int agentID, String agentType, List<Preference> preferencesUtilisateur, List<Contrainte> contraintesUtilisateur) {
         this.agentID = agentID;
@@ -24,8 +23,6 @@ public abstract class Agent extends Thread{
         this.preferences = preferencesUtilisateur;
         this.contraintes = contraintesUtilisateur;
     }
-
-
 
     //////////////// Getter pour les attributs
 
@@ -39,7 +36,7 @@ public abstract class Agent extends Thread{
 
     //////////////// Gestion des la communication entre agents
 
-     public void sendMessage(Message message) {
+    public void sendMessage(Message message) {
         message.getReceiver().receiveMessage(message);
     }
 
@@ -48,8 +45,9 @@ public abstract class Agent extends Thread{
         boiteAuxLettres.add(message);
     }
 
-    
-
+    public void log(String message) {
+        System.out.println("[" + this.agentType + " " + this.agentID + "] " + message);
+    }
 }
 
 

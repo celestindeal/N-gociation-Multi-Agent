@@ -1,33 +1,34 @@
 package Agent;
 
+import Communication.Offre;
+
 import java.util.ArrayList;
 
-import communication.Offre;
-
 public class Historique {
-    private ArrayList<Offre> Offrefournisseur = new ArrayList<Offre>();
-    private ArrayList<Offre> OffreNegociateur = new ArrayList<Offre>() ;
+    private ArrayList<Offre> offrefournisseur = new ArrayList<Offre>();
+    private ArrayList<Offre> offreNegociateur = new ArrayList<Offre>();
+    private Service service;
+    private double targetPrice;
 
-    public Historique() {
-
+    public Historique(Service service, double targetPrice) {
+        this.service = service;
+        this.targetPrice = targetPrice;
     }
-    
+
     public ArrayList<Offre> getOffrefournisseur() {
-        return Offrefournisseur;
+        return offrefournisseur;
     }
 
     public ArrayList<Offre> getOffreNegociateur() {
-        return OffreNegociateur;
+        return offreNegociateur;
     }
 
-    public Offre addOffreFournisseur(Offre offre) {
-        Offrefournisseur.add(offre);
-        return offre;
+    public Service getService() {
+        return service;
     }
 
-    public Offre addOffreNegociateur(Offre offre) {
-        OffreNegociateur.add(offre);
-        return offre;
+    public double getTargetPrice() {
+        return targetPrice;
     }
-    
+
 }

@@ -6,26 +6,21 @@ import Agent.AgentFournisseur;
 import Agent.AgentNegociateur;
 import Agent.Contrainte;
 import Agent.Preference;
-import communication.placePublic;
+import Communication.PlacePublique;
 
-
-
-
-public class main {
-
+public class Main {
     public static void main(String[] args) {
-        
-        ArrayList<Thread> fournisseur = new ArrayList<>();
-        ArrayList<Thread> negociateur = new ArrayList<>();
+        ArrayList<Thread> fournisseurs = new ArrayList<>();
+        ArrayList<Thread> negociateurs = new ArrayList<>();
 
-         // créer 3 services à la place 
+        // créer 3 services à la place
         ArrayList<Agent.Service> services = new ArrayList<Agent.Service>();
-        for(int i = 0; i < 1; i++){
-            Agent.Service s = new Agent.Service(i, null, Double.NEGATIVE_INFINITY );
+        for (int i = 0; i < 1; i++) {
+            Agent.Service s = new Agent.Service(i, null, Double.NEGATIVE_INFINITY);
             services.add(s);
         }
 
-        placePublic.getInstance(services);
+        PlacePublique.setServicesPossible(services);
 
 
         // créer 3 agents fournisseurs
@@ -36,29 +31,28 @@ public class main {
 
             AgentFournisseur f = new AgentFournisseur(i, preferences, contraintes);
             Thread thread = new Thread(f);
-            fournisseur.add(thread);
+            fournisseurs.add(thread);
 
-            thread.start(); 
+            thread.start();
         }
 
         System.out.println("Agents fournisseurs créés");
         // créer 3 agents clients
         Random random = new Random();
-        
-        for(int i = 0; i < 2; i++){
+
+        for (int i = 0; i < 2; i++) {
             List<Preference> preferences = new ArrayList<Preference>();
             List<Contrainte> contraintes = new ArrayList<Contrainte>();
             double valeurAleatoire = random.nextInt(1000) + 4000;
             AgentNegociateur f = new AgentNegociateur(i, preferences, contraintes, valeurAleatoire);
             Thread thread = new Thread(f);
-            negociateur.add(thread);
+            negociateurs.add(thread);
 
-            thread.start(); 
+            thread.start();
         }
 
         System.out.println("Agents négociateurs créés");
 
-       
 
     }
 }

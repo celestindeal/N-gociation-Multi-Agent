@@ -20,7 +20,7 @@ public class Service {
         this.agentFournisseur = agentFournisseur;
     }
 
-    public void setPrix( double prix) {
+    public void setPrix(double prix) {
         this.prix = prix;
     }
 

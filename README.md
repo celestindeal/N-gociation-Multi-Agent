@@ -5,7 +5,7 @@ Un agentNegociateur cherche simplement un service.
 Les agents garde un historique des messages pour faire leurs statégie
 
 
-Les thread sont toujours dans le main.
+Les thread sont toujours dans le Main.
 
 # Messages
 
