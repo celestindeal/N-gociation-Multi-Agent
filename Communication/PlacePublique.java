@@ -51,7 +51,7 @@ public final class PlacePublique {
         return servicesEnVente;
     }
 
-    public ArrayList<Service> getserviceVenduFournisseur(AgentFournisseur agent) {
+    public ArrayList<Service> getServiceVenduFournisseur(AgentFournisseur agent) {
         ArrayList<Service> serviceVenduFournisseur = new ArrayList<Service>();
         for (Service service : servicesEnVente) {
             if (service.getAgentFournisseur() == agent) {

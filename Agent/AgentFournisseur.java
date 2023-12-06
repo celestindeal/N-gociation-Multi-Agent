@@ -3,8 +3,6 @@ package Agent;
 import Communication.*;
 import Strategies.StrategiesFournisseur;
 
-import javax.sound.midi.Soundbank;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -20,7 +18,7 @@ public class AgentFournisseur extends Agent {
     public void run() {
         while (true) {
             try {
-                if (PlacePublique.getInstance().getserviceVenduFournisseur(this).isEmpty()) {
+                if (PlacePublique.getInstance().getServiceVenduFournisseur(this).isEmpty()) {
                     proposerService();
                 }
                 if (!boiteAuxLettres.isEmpty()) {
@@ -31,6 +29,55 @@ public class AgentFournisseur extends Agent {
                 e.printStackTrace();
                 break;
             }
+        }
+    }
+
+    // Fonction de gestion des messages
+    public void traiterOffre() {
+        ArrayList<Service> servicesEnVente = PlacePublique.getInstance().getServiceAvendre();
+
+        cleanBoiteAuxLettres();
+
+        for (Service service : servicesEnVente) {
+            // trouver toutes les offres pour ce service
+            ArrayList<Message> offres = new ArrayList<>();
+            for (Message message : boiteAuxLettres) {
+                if (message.getOffer().getService().equals(service)) {
+                    offres.add(message);
+                    addHistorique(message.getSender(), message.getOffer(), null);
+                    boiteAuxLettres.remove(message);
+                }
+            }
+            
+            //stratégie
+            for (Message message: StrategiesFournisseur.strategieFournisseur(offres, historique)) {
+                sendMessage(message);
+                cleanMessage(message, message.getReceiver());
+            }
+        }
+    }
+
+    private void cleanBoiteAuxLettres(){
+        for (Message message : boiteAuxLettres){
+            if(! (message instanceof MessageOffre)){
+                cleanMessage(message, message.getSender());
+                //supprimer le message que l'on viens de traiter de la boite aux lettres
+                boiteAuxLettres.remove(message);
+            }
+
+        }
+    }
+
+    private void cleanMessage(Message message, Agent agent ) {
+        if(message instanceof MessageValide){
+            // supprimer l'historique de l'agent qui a envoyé l'offre
+            historique.remove(agent);
+            // supprimer les services de la vente (place publique)
+            PlacePublique.getInstance().removeService(message.getOffer().getService());
+        }
+        else if(message instanceof MessageRefus){
+            // supprimer l'historique de l'agent qui a envoyé l'offre
+            historique.remove(agent);
         }
     }
 
@@ -100,14 +147,14 @@ public class AgentFournisseur extends Agent {
     private void addHistorique(Agent negociateur, Offre offreNegociateur, Offre offreFournisseur) {
         // si l'agent n'a pas encore d'historique on le créer
         if (!historique.containsKey(negociateur)) {
-            Historique h = new Historique(offreNegociateur.getService(), offreNegociateur.getService().getPrix()*0.8);
-            if(offreNegociateur != null) h.getOffreNegociateur().add(offreNegociateur);
-            if(offreFournisseur != null) h.getOffrefournisseur().add(offreFournisseur);
+            Historique h = new Historique(offreNegociateur.getService(), offreNegociateur.getService().getPrix() * 0.8);
+            if (offreNegociateur != null) h.getOffreNegociateur().add(offreNegociateur);
+            if (offreFournisseur != null) h.getOffrefournisseur().add(offreFournisseur);
             historique.put(negociateur, h);
         } else {
             // sinon on ajoute l'offre à l'historique
-            if(offreNegociateur != null) historique.get(negociateur).getOffreNegociateur().add(offreNegociateur);
-            if(offreFournisseur != null) historique.get(negociateur).getOffrefournisseur().add(offreFournisseur);
+            if (offreNegociateur != null) historique.get(negociateur).getOffreNegociateur().add(offreNegociateur);
+            if (offreFournisseur != null) historique.get(negociateur).getOffrefournisseur().add(offreFournisseur);
         }
     }
 
@@ -163,7 +210,8 @@ public class AgentFournisseur extends Agent {
         }
 
         //Savoir si le service est déjà negocier 
-        for (Historique h : historique.values()) {
+        for (Agent agentIter : historique.keySet()) {
+            Historique h = historique.get(agentIter);
             if (h.getOffreNegociateur().get(0).getService().equals(service)) {
                 // le service est déjà negocier
                 // si c'est parle le même agent on autorise la negociation

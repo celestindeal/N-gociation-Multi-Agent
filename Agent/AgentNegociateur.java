@@ -104,7 +104,6 @@ public class AgentNegociateur extends Agent {
         historique.put(service.getAgentFournisseur(), h);
 
         MessageOffre messegaToFournisseur = StrategiesNegociateur.strategieInitiale(this, service.getAgentFournisseur(), h);
-        this.log("Je veux acheter les service " + messegaToFournisseur.getOffer().getService().getServiceID() + " qui est proposer par le fourniseur " + messegaToFournisseur.getReceiver().getAgentID() + " au prix de " + messegaToFournisseur.getOffer().getPrix());
         sendMessage(messegaToFournisseur);
 
     }

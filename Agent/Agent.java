@@ -39,7 +39,7 @@ public abstract class Agent extends Thread {
     public void sendMessage(Message message) {
         message.getReceiver().receiveMessage(message);
 
-        this.log("J'envoie un message à [" + message.getReceiver().getAgentType() + " " + message.getReceiver().getAgentID() + "] - Le message est de type "  + message.getClass().getSimpleName());
+        this.log("J'envoie un message à [" + message.getReceiver().getAgentType() + " " + message.getReceiver().getAgentID() + "] - Le message est de type "  + this.getMessageLog(message));
     }
 
     // Ajouter un message à la boîte aux lettres
@@ -49,6 +49,19 @@ public abstract class Agent extends Thread {
 
     public void log(String message) {
         System.out.println("[" + this.agentType + " " + this.agentID + "] " + message);
+    }
+
+    private String getMessageLog(Message message) {
+        switch (message.getClass().getSimpleName()) {
+            case "MessageOffre":
+                return "MessageOffre - Service " + message.getOffer().getService().getServiceID() + " - Prix " + message.getOffer().getPrix();
+            case "MessageRefus":
+                return "MessageRefus - Service " + message.getOffer().getService().getServiceID();
+            case "MessageValide":
+                return "MessageValide - Service " + message.getOffer().getService().getServiceID() + " - Prix " + message.getOffer().getPrix();
+            default:
+                return "Message non reconnu";
+        }
     }
 }
 
