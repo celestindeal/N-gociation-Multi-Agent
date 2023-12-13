@@ -3,19 +3,20 @@ package Agent;
 import Communication.*;
 import Strategies.StrategiesNegociateur;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // Classe pour les agents négociateurs
 public class AgentNegociateur extends Agent {
-
-    private Double money = 0.0;
     private Map<Agent, Historique> historique = new HashMap<>();
+    private ArrayList<Service> servicesRefuses = new ArrayList<>();
+    private ArrayList<Service> servicesEnNegoce = new ArrayList<>();
 
     public AgentNegociateur(int agentID, List<Preference> preferences, List<Contrainte> contraintes, Double money) {
         super(agentID, "Negociateur", preferences, contraintes);
-        this.money = money;
+    }
+
+    public ArrayList<Service> getServicesRefuses() {
+        return servicesRefuses;
     }
 
     @Override
@@ -23,11 +24,11 @@ public class AgentNegociateur extends Agent {
         while (true) {
             try {
                 Thread.sleep(2000);
-                if (historique.isEmpty() && !PlacePublique.getInstance().getServiceAvendre().isEmpty()) {
-                    rechercheService();
-                }
                 if (!boiteAuxLettres.isEmpty()) {
                     traiterMessages(boiteAuxLettres.get(0));
+                }
+                if (!PlacePublique.getInstance().getServiceAvendre().isEmpty()) {
+                    rechercheService();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -53,13 +54,15 @@ public class AgentNegociateur extends Agent {
 
 
         } else if (messageOfFournisseur instanceof MessageRefus) {
-            this.log("L'offre pour le service" + messageOfFournisseur.getOffer().getService().getServiceID() + "que j'ai envoyé a " + messageOfFournisseur.getSender().getAgentID() + " a été refusé");
+            this.log("L'offre pour le service " + messageOfFournisseur.getOffer().getService().getServiceID() + " que j'ai envoyé a " + messageOfFournisseur.getSender().getAgentID() + " a été refusé");
 
-            //supprimer l'hisorique de l'agent
+            // supprimer l'historique de l'agent
             historique.remove(messageOfFournisseur.getSender());
+            // ajouter le service à la liste des services refusés
+            servicesRefuses.add(messageOfFournisseur.getOffer().getService());
 
         } else if (messageOfFournisseur instanceof MessageValide) {
-            this.log("L'offre pour le service" + messageOfFournisseur.getOffer().getService().getServiceID() + "que j'ai envoyé a " + messageOfFournisseur.getSender().getAgentID() + " a été accepté");
+            this.log("L'offre pour le service " + messageOfFournisseur.getOffer().getService().getServiceID() + " que j'ai envoyé a " + messageOfFournisseur.getSender().getAgentID() + " a été accepté");
 
             historique.remove(messageOfFournisseur.getSender());
         } else {
@@ -95,17 +98,30 @@ public class AgentNegociateur extends Agent {
 
     // fonction pour recherche un service dans la liste des services
     public void rechercheService() {
-        // prend un service aléatoire dans la liste des services et envoyer une offre au prix
+        // Parmi la liste des services disponibles, je vais faire une offre sur tous les services qui ne sont pas dans la liste des services refusés
         this.log("Je recherche un service - Il y a " + PlacePublique.getInstance().getServiceAvendre().size() + " services en vente");
-        Service service = PlacePublique.getInstance().getServiceAvendre().get((int) (Math.random() * PlacePublique.getInstance().getServiceAvendre().size()));
+        boolean serviceTrouve = false;
+        for (Service service : PlacePublique.getInstance().getServiceAvendre()) {
+            if (!servicesRefuses.contains(service) && !servicesEnNegoce.contains(service)) {
+                serviceTrouve = true;
+                // ajouter à l'historique
+                Random random = new Random();
+                int nombreMaxMessage = random.nextInt(8) + 3;
+                double randomNumber = (0.8 + Math.random() * 0.1);
 
-        // ajouter à l'histoirique
-        Historique h = new Historique(service, service.getPrix() * 0.8);
-        historique.put(service.getAgentFournisseur(), h);
+                Historique h = new Historique(service, service.getPrix() * randomNumber, nombreMaxMessage);
+                log("Le prix cible est de " + service.getPrix() * randomNumber);
+                historique.put(service.getAgentFournisseur(), h);
 
-        MessageOffre messegaToFournisseur = StrategiesNegociateur.strategieInitiale(this, service.getAgentFournisseur(), h);
-        sendMessage(messegaToFournisseur);
-
+                MessageOffre messageToFournisseur = StrategiesNegociateur.strategieInitiale(this, service.getAgentFournisseur(), h);
+                sendMessage(messageToFournisseur);
+                // ajouter le service à la liste des services en négociation
+                servicesEnNegoce.add(service);
+            }
+        }
+        if (!serviceTrouve) {
+            this.log("Je n'ai pas trouvé de service à acheter");
+        }
     }
 
     private void valideTransaction() {

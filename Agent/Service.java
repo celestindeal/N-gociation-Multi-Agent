@@ -3,7 +3,7 @@ package Agent;
 public class Service {
 
     private AgentFournisseur agentFournisseur;
-    private int serviceID;
+    private int serviceID = 0;
     private double prix;
 
     public Service(int serviceID, AgentFournisseur agentFournisseur, double prix) {
@@ -22,6 +22,10 @@ public class Service {
 
     public void setPrix(double prix) {
         this.prix = prix;
+    }
+
+    public void setServiceID(int serviceID) {
+        this.serviceID = serviceID;
     }
 
     public int getServiceID() {

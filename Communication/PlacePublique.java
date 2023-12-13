@@ -10,6 +10,7 @@ public final class PlacePublique {
     private static final ArrayList<Service> servicesEnVente = new ArrayList<Service>();
     private static PlacePublique instance;
     private static ArrayList<Service> servicesPossible = new ArrayList<Service>();
+    private static int nbServices = 0;
 
 
     private PlacePublique() {
@@ -35,15 +36,14 @@ public final class PlacePublique {
     }
 
     public void buyService(Service service) {
-        System.out.println("MISE EN VENTE : le service " + service.getServiceID() + " vendu par le fournisseur " + service.getAgentFournisseur().getAgentID() + " au prix de "  + service.getPrix());
+        service.setServiceID(nbServices);
+        nbServices++;
+        System.out.println("[Place Publique]\t\t\tMISE EN VENTE : le service " + service.getServiceID() + " vendu par le fournisseur " + service.getAgentFournisseur().getAgentID() + " au prix de " + service.getPrix() + "€");
         servicesEnVente.add(service);
     }
 
     public void removeService(Service service) {
-        System.out.println("RETRAIT DE LA VENTE : le service " + service.getServiceID() + " vendu par " + service.getAgentFournisseur().getAgentID() + " a été retiré de la vente");
-        for (Service s : servicesEnVente) {
-            System.out.println(s.getServiceID());
-        }
+        System.out.println("[Place Publique]\t\t\tRETRAIT DE LA VENTE : le service " + service.getServiceID() + " vendu par " + service.getAgentFournisseur().getAgentID() + " a été retiré de la vente");
         servicesEnVente.remove(service);
     }
 

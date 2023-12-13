@@ -1,10 +1,9 @@
 package Agent;
 
+import Communication.Message;
+
 import java.util.ArrayList;
 import java.util.List;
-
-
-import Communication.Message;
 
 // Classe de base pour tous les agents
 public abstract class Agent extends Thread {
@@ -34,21 +33,21 @@ public abstract class Agent extends Thread {
         return agentType;
     }
 
-    //////////////// Gestion des la communication entre agents
+    //////////////// Gestion de la communication entre agents
 
     public void sendMessage(Message message) {
+        this.log("J'envoie un message à [" + message.getReceiver().getAgentType() + " " + message.getReceiver().getAgentID() + "] - Le message est de type " + this.getMessageLog(message));
         message.getReceiver().receiveMessage(message);
-
-        this.log("J'envoie un message à [" + message.getReceiver().getAgentType() + " " + message.getReceiver().getAgentID() + "] - Le message est de type "  + this.getMessageLog(message));
     }
 
     // Ajouter un message à la boîte aux lettres
     public void receiveMessage(Message message) {
+        this.log("Je reçois un message de [" + message.getSender().getAgentType() + " " + message.getSender().getAgentID() + "] - Le message est de type " + this.getMessageLog(message));
         boiteAuxLettres.add(message);
     }
 
     public void log(String message) {
-        System.out.println("[" + this.agentType + " " + this.agentID + "] " + message);
+        System.out.println("[" + this.agentType + " " + this.agentID + "]\t\t\t\t" + message);
     }
 
     private String getMessageLog(Message message) {

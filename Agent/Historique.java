@@ -9,10 +9,20 @@ public class Historique {
     private ArrayList<Offre> offreNegociateur = new ArrayList<Offre>();
     private Service service;
     private double targetPrice;
+    private int nbMaxOffre;
 
     public Historique(Service service, double targetPrice) {
+        this(service, targetPrice, 0);
+    }
+
+    public Historique(Service service, double targetPrice, int nbMaxOffre) {
         this.service = service;
         this.targetPrice = targetPrice;
+        this.nbMaxOffre = nbMaxOffre;
+    }
+
+    public boolean getTimeValide() {
+        return this.nbMaxOffre > offreNegociateur.size();
     }
 
     public ArrayList<Offre> getOffrefournisseur() {
